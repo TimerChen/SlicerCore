@@ -2,11 +2,13 @@
 // Created by timemachine on 18-6-25.
 //
 
-#include <iostream>
+#include <stdlib.h>
 #include <library.h>
 
 int main()
 {
-    slicer_connect(0, NULL, 0, 0);
+    //start
+    slicer_connect(-1, NULL, 0, 0);
+
 
 }

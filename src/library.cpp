@@ -1,12 +1,18 @@
 #include "library.h"
+#include "configManager.h"
+#include "SlicerCore.h"
 
 #include <iostream>
 
-void hello() {
-    std::cout << "Hello, World!" << std::endl;
-}
-
-void slicer_connect(long long id, char* data, unsigned int width, unsigned int length)
+void slicer_connect(int64_t id, void* data, uint width, uint height)
 {
-    std::cout << "slicer_connect ok.";
+    //std::cout << id;
+    if(id == -1)
+    {
+        //init
+	    SlicerCore::initFolder();
+    }else
+    {
+        SlicerCore::update(id, data, width, height);
+    }
 }
