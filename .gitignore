@@ -2,6 +2,7 @@
 test/cmake_test
 
 #Build
+.idea/
 cmake-build-debug
 
 # Prerequisites
