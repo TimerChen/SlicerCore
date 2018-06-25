@@ -15,12 +15,12 @@ struct Config;
 
 class FilterRender {
 public:
-	static void render(void *data, uint width, uint height, Config* config);
+	static void* render(void *data, uint width, uint height, Config* config);
 
 private:
-	static void doFlip(void *data, uint width, uint height, bool isLR);
-	static void doSlice(void *data, uint width, uint height, std::vector<Point>);
-	static void doColor(void *data, uint width, uint height, double r, double g, double b ,double a);
+	static void* doFlip(void *data, uint width, uint height, bool isLR);
+	static void* doSlice(void *data, uint width, uint height, std::vector<Point>);
+	static void* doColor(void *data, uint width, uint height, double r, double g, double b ,double a);
 };
 
 

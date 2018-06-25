@@ -14,7 +14,7 @@ A SlicerCore of Slicer for Weston with Wayland.
 You can find this in library.h
 
 ```C++
-void slicer_connect(int64_t id, void* data, uint width, uint height);
+void* slicer_connect(int64_t id, void* data, uint width, uint height);
 ```
 
 To initialize this core, you should use:
@@ -30,9 +30,9 @@ You can find this in FilterRender.h
 ```C++
 class FilterRender {
 private:
-	static void doFlip(void *data, uint width, uint height, bool isLR);
-	static void doSlice(void *data, uint width, uint height, std::vector<Point>);
-	static void doColor(void *data, uint width, uint height, double r, double g, double b ,double a);
+	static void* doFlip(void *data, uint width, uint height, bool isLR);
+	static void* doSlice(void *data, uint width, uint height, std::vector<Point>);
+	static void* doColor(void *data, uint width, uint height, double r, double g, double b ,double a);
 };
 ```
 

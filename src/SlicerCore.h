@@ -13,7 +13,7 @@ class SlicerCore
 public:
 	static void initFolder();
 
-	static void update(u_int64_t id, void *data, uint width, uint height);
+	static void* update(u_int64_t id, void *data, uint width, uint height);
 
 private:
 	static Config updateFromFile(uint id);

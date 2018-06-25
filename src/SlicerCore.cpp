@@ -23,12 +23,12 @@ void SlicerCore::initFolder()
 	//ConfigManager::idSet = std::set<int64_t>();
 }
 
-void SlicerCore::update(uint64_t id, void *data, uint width, uint height)
+void* SlicerCore::update(uint64_t id, void *data, uint width, uint height)
 {
 	Config config;
 
 	config = ConfigManager::loadConfig(id);
-	FilterRender::render(data, width, height, &config);
+	return FilterRender::render(data, width, height, &config);
 	//filterIt(data, width, height, config);
 }
 
