@@ -8,10 +8,9 @@
 
 #include <algorithm>
 
-struct Point
-{
-	double x,y;
-};
+#include "Point.h"
+
+
 
 class Filter;
 

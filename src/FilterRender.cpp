@@ -5,55 +5,21 @@
 #include "FilterRender.h"
 #include "filter.h"
 #include "Point.h"
+#include "Geometry.h"
 
-const static double eps = 1e-8;
+#include <algorithm>
 
-int sgn(double x) {
-	return (x > eps) - (x < -eps);
-}
-int sgn(double a, double b){
-	return sgn(a - b);
-}
-double sqr(double x) {
-	return x * x;
-}
-
-struct Line {
-	Point a, b;
-	Line() {}
-	Line(Point a, Point b) : a(a), b(b) {}
-	Point v() {
-		return b - a;
-	}
-};
-
-bool OnLine(Point p, Line l){
-	return sgn((l.a - p) * (l.b - p)) == 0 && sgn((p - l.a) ^ (l.b - l.a)) >= 0 && sgn((p - l.b) ^ (l.a - l.b)) >= 0;
-}
-
-double det(Point a, Point b, Point c){
-	return (b - a) * (c - a);
-}
-
-bool InPoly(Point p, vector<Point> poly){
-	int cnt = 0;
-	for(int i = 0; i < poly.size(); i++){
-		Point a = poly[i];
-		Point b = poly[(i + 1) % poly.size()];
-		if(OnLine(p, Line(a, b)))
-			return true;
-		int x = sgn(det(a, p, b));
-		int y = sgn(a.y - p.y);
-		int z = sgn(b.y - p.y);
-		cnt += (x > 0 && y <= 0 && z > 0);
-		cnt -= (x < 0 && z <= 0 && y > 0);
-	}
-	return cnt;
-}
+using namespace Geometry;
 
 void* FilterRender::render(void *data, uint width, uint height, Config *config) {
 	if(config == NULL) return data;
 	int n = config->nFilters;
+
+	//Remain to do...................
+	std::swap(width, height);
+	//Remain to do...................
+
+
 	for(int i=0;i<n;++i)
 	{
 		switch (config->filters[i]->type())
@@ -100,7 +66,7 @@ void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 		}
 	}
 
-	unsigned char * p = data;
+	unsigned char * p = (unsigned char*)data;
 
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
@@ -130,7 +96,7 @@ void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 		}
 	}
 
-	p = data;
+	p = (unsigned char*)data;
 
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
@@ -151,7 +117,7 @@ void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 	map = NULL;
 }
 
-void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Point>) {
+void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Point> poly) {
 	unsigned char ***map;
 
 	map = new unsigned char**[width];
@@ -162,7 +128,7 @@ void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Poi
 		}
 	}
 
-	unsigned char * p = data;
+	unsigned char * p = (unsigned char*)data;
 
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
@@ -184,7 +150,7 @@ void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Poi
 		}
 	}
 
-	p = data;
+	p = (unsigned char*)data;
 
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
@@ -216,7 +182,7 @@ void* FilterRender::doColor(void *data, uint width, uint height, double r, doubl
 		}
 	}
 
-	unsigned char * p = data;
+	unsigned char * p = (unsigned char*)data;
 
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
@@ -230,16 +196,14 @@ void* FilterRender::doColor(void *data, uint width, uint height, double r, doubl
 
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
-			if (!InPoly(Point(i, j), poly)) {
 				map[i][j][0] = b;
 				map[i][j][1] = g;
 				map[i][j][2] = r;
 				map[i][j][3] = a;
-			}
 		}
 	}
 
-	p = data;
+	p = (unsigned char*)data;
 
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
