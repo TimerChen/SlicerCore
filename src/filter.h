@@ -9,7 +9,7 @@
 
 #include "slicerUtils.h"
 
-char *filterIt(char* data, unsigned int width, unsigned int height, std::vector<Point> poly);
+char *filterIt(char* data, unsigned int width, unsigned int height, std::vector<Geometry::Point> poly);
 
 class Filter
 {
@@ -33,7 +33,7 @@ class FilterSlicer : public Filter
 public:
 	//const static int8_t type = 1;
 	virtual int8_t type();
-	std::vector<Point> poly;
+	std::vector<Geometry::Point> poly;
 };
 
 class FilterColor : public Filter

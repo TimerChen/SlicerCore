@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "filter.h"
-
+#include "slicerUtils.h"
 #include "configManager.h"
 
 #include <time.h>
@@ -128,7 +128,7 @@ void ConfigManager::loadFilter(std::ifstream &in, FilterFlip *filter) {
 void ConfigManager::loadFilter(std::ifstream &in, FilterSlicer *filter) {
 	uint32_t n;
 	in.read((char*)&n, sizeof(n));
-	filter->poly = std::vector<Point>(n);
+	filter->poly = std::vector<Geometry::Point>(n);
 	for(int i=0;i<n;++i)
 	{
 		double x,y;
