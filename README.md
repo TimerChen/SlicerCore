@@ -32,7 +32,7 @@ class FilterRender {
 private:
 	static void* doFlip(void *data, uint width, uint height, bool isLR);
 	static void* doSlice(void *data, uint width, uint height, std::vector<Point>);
-	static void* doColor(void *data, uint width, uint height, double r, double g, double b ,double a);
+	static void* doColor(void *data, uint width, uint height, u_int8_t r, u_int8_t g, u_int8_t b ,u_int8_t a);
 	static void* doAuto(void *data, uint width, uint height);
 };
 ```
