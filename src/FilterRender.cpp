@@ -7,11 +7,19 @@
 #include "Point.h"
 #include "Geometry.h"
 
+#include <algorithm>
+
 using namespace Geometry;
 
 void* FilterRender::render(void *data, uint width, uint height, Config *config) {
 	if(config == NULL) return data;
 	int n = config->nFilters;
+
+	//Remain to do...................
+	std::swap(width, height);
+	//Remain to do...................
+
+
 	for(int i=0;i<n;++i)
 	{
 		switch (config->filters[i]->type())
