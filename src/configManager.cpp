@@ -47,6 +47,9 @@ void ConfigManager::storeFilter(std::ofstream &out, Filter* filter) {
 		case 2: //color
 			ConfigManager::storeFilter(out, (FilterColor*)filter);
 			break;
+		case 3: //auto
+			ConfigManager::storeFilter(out, (FilterAuto*)filter);
+			break;
 	}
 }
 
@@ -118,6 +121,9 @@ void ConfigManager::loadFilter(std::ifstream &in, Filter *filter) {
 		case 2: //color
 			ConfigManager::loadFilter(in, (FilterColor*)filter);
 			break;
+		case 3:
+			ConfigManager::loadFilter(in, (FilterAuto*)filter);
+			break;
 	}
 }
 
@@ -144,4 +150,14 @@ void ConfigManager::loadFilter(std::ifstream &in, FilterColor *filter) {
 	in.read((char*)&filter->g, sizeof(filter->g));
 	in.read((char*)&filter->b, sizeof(filter->b));
 	in.read((char*)&filter->a, sizeof(filter->a));
+}
+
+
+void ConfigManager::loadFilter(std::ifstream &in, FilterAuto* filter)
+{
+
+}
+void ConfigManager::storeFilter(std::ofstream &out, FilterAuto* filter)
+{
+
 }

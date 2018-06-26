@@ -1,4 +1,4 @@
-#include "library.h"
+#include "librarySlicerCore.h"
 #include "configManager.h"
 #include "SlicerCore.h"
 

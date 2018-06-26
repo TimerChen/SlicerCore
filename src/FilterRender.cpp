@@ -42,7 +42,7 @@ void* FilterRender::render(void *data, uint width, uint height, Config *config) 
 			case 3:
 			{
 				FilterAuto *f = (FilterAuto*)config->filters[i];
-				data = FilterAuto::doAuto(data, width, height);
+				data = FilterRender::doAuto(data, width, height);
 				break;
 			}
 
@@ -242,9 +242,9 @@ void* FilterRender::doAuto(void *data, uint width, uint height) {
 	bool *all;
 
 	map = new unsigned char**[height];
-	le = new int*[height];
-	ri = new int*[height];
-	all = new bool*[height];
+	le = new int[height];
+	ri = new int[height];
+	all = new bool[height];
 
 	for (int i = 0; i < height; i++) {
 		map[i] = new unsigned char*[width];

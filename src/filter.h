@@ -44,4 +44,10 @@ public:
 	u_int8_t r,g,b,a;
 };
 
+class FilterAuto : public Filter
+{
+public:
+	virtual int8_t type();
+};
+
 #endif //SLICER_FILTER_H

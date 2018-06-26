@@ -19,3 +19,7 @@ int8_t FilterSlicer::type() {
 int8_t FilterColor::type() {
 	return 2;
 }
+
+int8_t FilterAuto::type() {
+	return 3;
+}

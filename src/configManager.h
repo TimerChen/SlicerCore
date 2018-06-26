@@ -79,6 +79,9 @@ public:
 	static void storeFilter(std::ofstream &out, FilterSlicer* filter);
 	static void storeFilter(std::ofstream &out, FilterColor* filter);
 
+	static void loadFilter(std::ifstream &in, FilterAuto* filter);
+	static void storeFilter(std::ofstream &out, FilterAuto* filter);
+
 
 
 
