@@ -32,7 +32,7 @@
  *
  * [one filter]:
  *
- *      @int8_t type: 0-flip 1-slice 2-color
+ *      @int8_t type: 0-flip 1-slice 2-color 3-auto
  *
  *      [when type=0]
  *
@@ -55,6 +55,10 @@
  *          @u_int8_t g     : Green(0~255)
  *          @u_int8_t b     : Blue(0~255)
  *          @u_int8_t alpha : Opacity(0~255)
+ *
+ *      [when type=3]
+ *
+ *          (nothing...)
  *
  */
 

@@ -33,6 +33,7 @@ private:
 	static void* doFlip(void *data, uint width, uint height, bool isLR);
 	static void* doSlice(void *data, uint width, uint height, std::vector<Point>);
 	static void* doColor(void *data, uint width, uint height, double r, double g, double b ,double a);
+	static void* doAuto(void *data, uint width, uint height);
 };
 ```
 
@@ -54,7 +55,7 @@ You can find this in configManager.h
  *
  * [one filter]:
  *
- *      @int8_t type: 0-flip 1-slice 2-color
+ *      @int8_t type: 0-flip 1-slice 2-color 3-auto
  *
  *      [when type=0]
  *
@@ -77,5 +78,10 @@ You can find this in configManager.h
  *          @u_int8_t g     : Green(0~255)
  *          @u_int8_t b     : Blue(0~255)
  *          @u_int8_t alpha : Opacity(0~255)
+ *
+ *      [when type=3]
+ *
+ *          (nothing...)
+ *
  */
  ```
