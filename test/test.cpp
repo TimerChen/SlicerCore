@@ -3,7 +3,7 @@
 //
 
 #include <stdlib.h>
-#include <library.h>
+#include <librarySlicerCore.h>
 
 int main()
 {
