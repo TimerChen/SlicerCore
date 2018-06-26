@@ -21,6 +21,7 @@ private:
 	static void* doFlip(void *data, uint width, uint height, bool isLR);
 	static void* doSlice(void *data, uint width, uint height, std::vector<Geometry::Point>);
 	static void* doColor(void *data, uint width, uint height, double r, double g, double b ,double a);
+	static void* doAuto(void *data, uint width, uint height);
 };
 
 
