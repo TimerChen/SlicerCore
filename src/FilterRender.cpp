@@ -11,14 +11,11 @@
 
 using namespace Geometry;
 
+const int threshold = 30;
+
 void* FilterRender::render(void *data, uint width, uint height, Config *config) {
 	if(config == NULL) return data;
 	int n = config->nFilters;
-
-	//Remain to do...................
-	std::swap(width, height);
-	//Remain to do...................
-
 
 	for(int i=0;i<n;++i)
 	{
@@ -42,6 +39,12 @@ void* FilterRender::render(void *data, uint width, uint height, Config *config) 
 				data = FilterRender::doColor(data, width, height, f->r, f->g, f->b, f->a);
 				break;
 			}
+			case 3:
+			{
+				FilterAuto *f = (FilterAuto*)config->filters[i];
+				data = FilterAuto::doAuto(data, width, height);
+				break;
+			}
 
 		}
 
@@ -55,21 +58,29 @@ void swap(unsigned char &a, unsigned char &b) {
 	b = t;
 }
 
+bool equal(unsigned char a[4], unsigned char b[4]) {
+	int sum = 0;
+	for (int i = 0; i < 4; i++) {
+		sum += abs(a[i] - b[i]);
+	}
+	return sum <= threshold;
+}
+
 void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 	unsigned char ***map;
 
-	map = new unsigned char**[width];
-	for (int i = 0; i < width; i++) {
-		map[i] = new unsigned char*[height];
-		for (int j = 0; j < height; j++) {
+	map = new unsigned char**[height];
+	for (int i = 0; i < height; i++) {
+		map[i] = new unsigned char*[width];
+		for (int j = 0; j < width; j++) {
 			map[i][j] = new unsigned char[4];
 		}
 	}
 
 	unsigned char * p = (unsigned char*)data;
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < 4; k++) {
 				map[i][j][k] = *(p + k);
 				// b g r a
@@ -79,18 +90,18 @@ void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 	}
 
 	if (isLR) {
-		for (int i = 0; i < width / 2; i++) {
-			for (int j = 0; j < height; j++) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width / 2; j++) {
 				for (int k = 0; k < 4; k++) {
-					swap(map[i][j][k], map[width - i][j][k]);
+					swap(map[i][j][k], map[i][width - j][k]);
 				}
 			}
 		}
 	} else {
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height / 2; j++) {
+		for (int i = 0; i < height / 2; i++) {
+			for (int j = 0; j < width; j++) {
 				for (int k = 0; k < 4; k++) {
-					swap(map[i][j][k], map[i][height - j][k]);
+					swap(map[i][j][k], map[height - i][j][k]);
 				}
 			}
 		}
@@ -98,8 +109,8 @@ void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 
 	p = (unsigned char*)data;
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < 4; k++) {
 				*(p + k) = map[i][j][k];
 			}
@@ -107,8 +118,8 @@ void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 		}
 	}
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			delete [] map[i][j];
 		}
 		delete [] map[i];
@@ -120,18 +131,18 @@ void* FilterRender::doFlip(void *data, uint width, uint height, bool isLR) {
 void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Point> poly) {
 	unsigned char ***map;
 
-	map = new unsigned char**[width];
-	for (int i = 0; i < width; i++) {
-		map[i] = new unsigned char*[height];
-		for (int j = 0; j < height; j++) {
+	map = new unsigned char**[height];
+	for (int i = 0; i < height; i++) {
+		map[i] = new unsigned char*[width];
+		for (int j = 0; j < width; j++) {
 			map[i][j] = new unsigned char[4];
 		}
 	}
 
 	unsigned char * p = (unsigned char*)data;
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < 4; k++) {
 				map[i][j][k] = *(p + k);
 				// b g r a
@@ -140,20 +151,20 @@ void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Poi
 		}
 	}
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			if (!InPoly(Point(i, j), poly)) {
-				map[i][j][0] = 255;
-				map[i][j][1] = 255;
-				map[i][j][2] = 255;
+				for (int k = 0; k < 4; k++) {
+					map[i][j][k] = 0;
+				}
 			}
 		}
 	}
 
 	p = (unsigned char*)data;
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < 4; k++) {
 				*(p + k) = map[i][j][k];
 			}
@@ -161,8 +172,8 @@ void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Poi
 		}
 	}
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			delete [] map[i][j];
 		}
 		delete [] map[i];
@@ -174,18 +185,18 @@ void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Poi
 void* FilterRender::doColor(void *data, uint width, uint height, double r, double g, double b, double a) {
 	unsigned char ***map;
 
-	map = new unsigned char**[width];
-	for (int i = 0; i < width; i++) {
-		map[i] = new unsigned char*[height];
-		for (int j = 0; j < height; j++) {
+	map = new unsigned char**[height];
+	for (int i = 0; i < height; i++) {
+		map[i] = new unsigned char*[width];
+		for (int j = 0; j < width; j++) {
 			map[i][j] = new unsigned char[4];
 		}
 	}
 
 	unsigned char * p = (unsigned char*)data;
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < 4; k++) {
 				map[i][j][k] = *(p + k);
 				// b g r a
@@ -194,8 +205,8 @@ void* FilterRender::doColor(void *data, uint width, uint height, double r, doubl
 		}
 	}
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 				map[i][j][0] = b;
 				map[i][j][1] = g;
 				map[i][j][2] = r;
@@ -205,8 +216,8 @@ void* FilterRender::doColor(void *data, uint width, uint height, double r, doubl
 
 	p = (unsigned char*)data;
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < 4; k++) {
 				*(p + k) = map[i][j][k];
 			}
@@ -214,8 +225,172 @@ void* FilterRender::doColor(void *data, uint width, uint height, double r, doubl
 		}
 	}
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			delete [] map[i][j];
+		}
+		delete [] map[i];
+	}
+	delete [] map;
+	map = NULL;
+}
+
+void* FilterRender::doAuto(void *data, uint width, uint height) {
+	unsigned char ***map;
+	int *le;
+	int *ri;
+	bool *all;
+
+	map = new unsigned char**[height];
+	le = new int*[height];
+	ri = new int*[height];
+	all = new bool*[height];
+
+	for (int i = 0; i < height; i++) {
+		map[i] = new unsigned char*[width];
+		for (int j = 0; j < width; j++) {
+			map[i][j] = new unsigned char[4];
+		}
+	}
+
+	unsigned char * p = (unsigned char*)data;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			for (int k = 0; k < 4; k++) {
+				map[i][j][k] = *(p + k);
+				// b g r a
+			}
+			p += 4;
+		}
+	}
+
+	const int margin = 5;
+
+	for (int i = 0; i < height; i++) {
+		bool flag = true;
+		le[i] = 0;
+		ri[i] = width;
+		for (int j = 0; j < margin; j++) {
+			if (equal(map[i][0], map[i][j])) {
+				le[i] = j;
+			} else {
+				flag = false;
+				break;
+			}
+		}
+		if (!flag) continue;
+		for (int j = 0; j < width - margin; j++) {
+			if (equal(map[i][j], map[i][j + margin])) {
+				le[i] = j;
+			} else {
+				break;
+			}
+		}
+		for (int j = width - 1; j >= le[i]; j--) {
+			if (equal(map[i][j], map[i][j - margin])) {
+				ri[i] = j;
+			} else {
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < height; i++) {
+		if (le[i] >= ri[i]) {
+			all[i] = true;
+		} else {
+			all[i] = false;
+		}
+	}
+
+	int i, j;
+	for (i = 0; i < height; i = j + 1) {
+		j = i;
+		int common = le[i];
+		for (; j < height; j ++) {
+			if (all[j]) {
+				break;
+			}
+			if (le[j] < common) {
+				common = le[j];
+			}
+		}
+		for (int k = i; k < j; k++) {
+			if (all[k]) continue;
+			le[k] = common;
+		}
+	}
+
+	for (i = 0; i < height; i = j + 1) {
+		j = i;
+		int common = ri[i];
+		for (; j < height; j ++) {
+			if (all[j]) {
+				break;
+			}
+			if (ri[j] > common) {
+				common = ri[j];
+			}
+		}
+		for (int k = i; k < j; k++) {
+			if (all[k]) continue;
+			ri[k] = common;
+		}
+	}
+
+	for (int i = 0; i < height; i++) {
+		if (!all[i]) break;
+		le[i] = width;
+		ri[i] = 0;
+		all[i] = false;
+
+	}
+
+	for (int i = height - 1; i >= 0; i--) {
+		if (!all[i]) break;
+		le[i] = width;
+		ri[i] = 0;
+		all[i] = false;
+	}
+
+	for (int i = 1; i < height; i++) {
+		if (all[i]) {
+			le[i] = le[i - 1];
+			ri[i] = ri[i - 1];
+		}
+	}
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < le[i]; j++) {
+			for (int k = 0; k < 4; k++) {
+				map[i][j][k] = 255;
+			}
+		}
+		for (int j = width - 1; j >= ri[i]; j--) {
+			for (int k = 0; k < 4; k++) {
+				map[i][j][k] = 0;
+			}
+		}
+	}
+
+	p = (unsigned char*)data;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			for (int k = 0; k < 4; k++) {
+				*(p + k) = map[i][j][k];
+			}
+			p += 4;
+		}
+	}
+
+	delete [] le;
+	delete [] ri;
+	delete [] all;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			delete [] map[i][j];
 		}
 		delete [] map[i];
