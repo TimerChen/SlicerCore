@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+extern "C"
 void* slicer_connect(int64_t id, void* data, uint width, uint height)
 {
     //std::cout << id;

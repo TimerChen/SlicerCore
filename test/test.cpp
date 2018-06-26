@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <librarySlicerCore.h>
 
+#include <time.h>
+#include <zconf.h>
+#include <iostream>
+
 int main()
 {
     //start
@@ -12,7 +16,14 @@ int main()
 
     int *data = new int;
 
-    slicer_connect((long long)data, data, 0, 0);
+
+
+    while(1)
+    {
+        slicer_connect((long long)data, data, 0, 0);
+		std::cerr << "fuck" << std::endl;
+        sleep(0.01);
+    }
 
     //test();
 
