@@ -3,4 +3,5 @@
 
 #include <algorithm>
 void* slicer_connect(int64_t id, void* data, uint width, uint height);
+//bool test();
 #endif

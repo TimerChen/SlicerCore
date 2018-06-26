@@ -8,7 +8,13 @@
 int main()
 {
     //start
-    slicer_connect(-1, NULL, 0, 0);
+    slicer_connect(0, NULL, 0, 0);
+
+    int *data = new int;
+
+    slicer_connect((long long)data, data, 0, 0);
+
+    //test();
 
 
 }

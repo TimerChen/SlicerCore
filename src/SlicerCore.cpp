@@ -18,7 +18,8 @@ void SlicerCore::initFolder()
 	//clear last time
 	//rmdir();
 	//mkdir
-	mkdir("~/.slicer/",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	//std::cerr << "init: mkdir" << std::endl;
+	//mkdir("~/.slicer",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 	//ConfigManager::idSet = std::set<int64_t>();
 }
@@ -30,6 +31,12 @@ void* SlicerCore::update(uint64_t id, void *data, uint width, uint height)
 	config = ConfigManager::loadConfig(id);
 	return FilterRender::render(data, width, height, &config);
 	//filterIt(data, width, height, config);
+}
+
+bool SlicerCore::test()
+{
+	ConfigManager::test();
+
 }
 
 

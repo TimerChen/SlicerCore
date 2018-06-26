@@ -72,7 +72,7 @@ public:
 	static void storeConfig(int64_t id, Config config);
 
 
-	static void loadFilter(std::ifstream &in, Filter* filter);
+	static Filter* loadFilter(std::ifstream &in);
 	static void storeFilter(std::ofstream &out, Filter* filter);
 
 	static void loadFilter(std::ifstream &in, FilterFlip* filter);
@@ -86,7 +86,7 @@ public:
 	static void loadFilter(std::ifstream &in, FilterAuto* filter);
 	static void storeFilter(std::ofstream &out, FilterAuto* filter);
 
-
+	static bool test();
 
 
 

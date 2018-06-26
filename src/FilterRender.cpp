@@ -182,7 +182,7 @@ void* FilterRender::doSlice(void *data, uint width, uint height, std::vector<Poi
 	map = NULL;
 }
 
-void* FilterRender::doColor(void *data, uint width, uint height, double r, double g, double b, double a) {
+void* FilterRender::doColor(void *data, uint width, uint height, u_int8_t r, u_int8_t g, u_int8_t b, u_int8_t a) {
 	unsigned char ***map;
 
 	map = new unsigned char**[height];

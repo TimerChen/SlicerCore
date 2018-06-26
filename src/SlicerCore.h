@@ -15,6 +15,8 @@ public:
 
 	static void* update(u_int64_t id, void *data, uint width, uint height);
 
+	static bool test();
+
 private:
 	static Config updateFromFile(uint id);
 };
